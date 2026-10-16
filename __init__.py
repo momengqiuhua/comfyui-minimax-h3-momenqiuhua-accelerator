@@ -1,0 +1,3 @@
+﻿"""末梦秋花 v4t + v5.2s 节点包"""
+from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
