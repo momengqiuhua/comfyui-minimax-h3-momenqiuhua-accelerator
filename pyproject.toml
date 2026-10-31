@@ -1,0 +1,11 @@
+[project]
+name = "comfyui-minimax-h3-momenqiuhua-accelerator"
+description = "MiniMax H3 加速与画质优化节点（末梦秋花系列）：v4t 等风来无损 kernel 加速 / 逆风飘人物一致性守护 / v3s1 顺风飘跳步加速，为 RTX 5060 8GB 实测调优"
+version = "1.0.0"
+license = { text = "MIT" }
+dependencies = []
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "玄枢 H3 优化器（末梦秋花）"
+Icon = ""

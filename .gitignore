@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+*.log
+v4t_kernel_cache.json
+diag_output/

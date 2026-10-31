@@ -34,7 +34,9 @@ def _log_probe_line(line):
 CANDIDATES = [("pytorch", True), ("sage", False), ("comfy_kitchen_int8", False)]
 
 # 大 token 分流阈值（跟 v3t1 一致）
-_LARGE_TOKEN_ROUTE_THRESHOLD = 32000
+_LARGE_TOKEN_ROUTE_THRESHOLD = 24000
+# 实测：22633 seq正常(135ms)，27358 seq量化后端炸(40~53s)，37743 seq慄20倍；
+# 另与GPU并发占用相关，取偏安全中间值
 
 
 # ============================================================
@@ -253,6 +255,11 @@ def _make_probe_wrapper(enabled, fingerprint, quality_mode="speed_priority",
                     print(f"[v4t KernelProbe]   {name}: 未注册，跳过")
                     continue
                 ms, peak_mb, out = _bench_backend(fn, q, k, v, heads, call_kwargs)
+                if ms > 5000:
+                    # 熔断：异常慢（长序列悬崖或GPU并发抢占），不参与择优
+                    print(f"[v4t KernelProbe]   {name}: bench {ms:.1f}ms > 5000ms 熔断")
+                    _log_probe_line(f"CUTOFF key={key_str} {name}: bench={ms:.1f}ms peak={peak_mb:.0f}MB")
+                    continue
                 print(f"[v4t KernelProbe]   {name}: {ms:.1f} ms, 显存峰值{peak_mb:.0f}MB "
                       f"({'无损' if lossless else '有损量化'})")
                 _log_probe_line(f"PROBE key={key_str} {name}: bench={ms:.1f}ms peak={peak_mb:.0f}MB")
